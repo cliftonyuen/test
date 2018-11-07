@@ -23,7 +23,7 @@ include: "*.view"
 
 
 explore: user_info  {
-  label: "Logon_Summary"
+  label: "Logon_Summary draft"
   join: bginfotable {
     sql_on: ${bginfotable.user_name} = ${user_info.s_amaccount_name};;
     relationship:  one_to_many}
