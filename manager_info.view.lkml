@@ -1,69 +1,108 @@
 view: manager_info {
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"
-  #   type: number
-  #   sql: ${TABLE}.user_id ;;
-  # }
-  #
-  # dimension: lifetime_orders {
-  #   description: "The total number of orders for each user"
-  #   type: number
-  #   sql: ${TABLE}.lifetime_orders ;;
-  # }
-  #
-  # dimension_group: most_recent_purchase {
-  #   description: "The date when each user last ordered"
-  #   type: time
-  #   timeframes: [date, week, month, year]
-  #   sql: ${TABLE}.most_recent_purchase_at ;;
-  # }
-  #
-  # measure: total_lifetime_orders {
-  #   description: "Use this for counting lifetime orders across many users"
-  #   type: sum
-  #   sql: ${lifetime_orders} ;;
-  # }
-}
+  derived_table: {
+    sql: SELECT extensionAttribute9, streetaddress, pager, company, title, displayName, telephoneNumber, sAMAccountName,
+        mail, mobile, facsimileTelephoneNumber, department, physicalDeliveryOfficeName, sn, givenname,info, convert(varchar(23),dateadd(mi,(cast(lastLogon as bigint) / 600000000)+1020, cast('1601-01-01' as datetime2)),101) as lastLogon_time, ipPhone, badPwdCount
+        ,lockedOutTime = case when lockoutTime <> '0' then convert(varchar(50),dateadd(mi,(cast(lockoutTime as bigint) / 600000000)+1020, cast('1601-01-01' as datetime2)),120) else '' end
+        ,distinguishedName, manager
+      FROM OpenQuery
+        (
+        ADSI,
+        'SELECT extensionAttribute9, streetaddress, pager, company, title, displayName, telephoneNumber, sAMAccountName,
+        mail, mobile, facsimileTelephoneNumber, department, physicalDeliveryOfficeName, sn, givenname,info, lastLogon, userAccountControl, ipPhone, badPwdCount, lockoutTime, distinguishedName, manager
+        FROM  ''LDAP://dc04.nems.org/OU=Accounts,DC=nems,DC=org''
+        WHERE objectClass =  ''User'' and ''userAccountControl:1.2.840.113556.1.4.803:''<>2') AS tblADSI
+      --where userAccountControl & 2 = 0
+       ;;
+  }
 
-# view: manager_info {
-#   # Or, you could make this view a derived table, like this:
-#   derived_table: {
-#     sql: SELECT
-#         user_id as user_id
-#         , COUNT(*) as lifetime_orders
-#         , MAX(orders.created_at) as most_recent_purchase_at
-#       FROM orders
-#       GROUP BY user_id
-#       ;;
-#   }
-#
-#   # Define your dimensions and measures here, like this:
-#   dimension: user_id {
-#     description: "Unique ID for each user that has ordered"
-#     type: number
-#     sql: ${TABLE}.user_id ;;
-#   }
-#
-#   dimension: lifetime_orders {
-#     description: "The total number of orders for each user"
-#     type: number
-#     sql: ${TABLE}.lifetime_orders ;;
-#   }
-#
-#   dimension_group: most_recent_purchase {
-#     description: "The date when each user last ordered"
-#     type: time
-#     timeframes: [date, week, month, year]
-#     sql: ${TABLE}.most_recent_purchase_at ;;
-#   }
-#
-#   measure: total_lifetime_orders {
-#     description: "Use this for counting lifetime orders across many users"
-#     type: sum
-#     sql: ${lifetime_orders} ;;
-#   }
-# }
+  dimension: company {
+    type: string
+    sql: ${TABLE}.company ;;
+  }
+
+  dimension: title {
+    type: string
+    sql: ${TABLE}.title ;;
+  }
+
+  dimension: display_name {
+    type: string
+    sql: ${TABLE}.displayName ;;
+  }
+
+
+  dimension: s_amaccount_name {
+    type: string
+    sql: ${TABLE}.sAMAccountName ;;
+  }
+
+  dimension: mail {
+    type: string
+    sql: ${TABLE}.mail ;;
+  }
+
+  dimension: department {
+    type: string
+    sql: ${TABLE}.department ;;
+  }
+
+  dimension: physical_delivery_office_name {
+    type: string
+    sql: ${TABLE}.physicalDeliveryOfficeName ;;
+  }
+
+  dimension: sn {
+    type: string
+    sql: ${TABLE}.sn ;;
+  }
+
+  dimension: givenname {
+    type: string
+    sql: ${TABLE}.givenname ;;
+  }
+
+
+  dimension: ip_phone {
+    type: string
+    sql: ${TABLE}.ipPhone ;;
+  }
+
+  dimension: distinguished_name {
+    type: string
+    sql: ${TABLE}.distinguishedName ;;
+  }
+
+  dimension: manager {
+    type: string
+    sql: ${TABLE}.manager ;;
+  }
+
+
+
+  set: detail {
+    fields: [
+#       extension_attribute9,
+#       streetaddress,
+#       pager,
+    company,
+    title,
+    display_name,
+#       telephone_number,
+    s_amaccount_name,
+    mail,
+#       mobile,
+#       facsimile_telephone_number,
+    department,
+    physical_delivery_office_name,
+    sn,
+    givenname,
+#       info,
+#       last_logon_time,
+    ip_phone,
+#       bad_pwd_count,
+#       locked_out_time,
+    distinguished_name,
+    manager
+  ]
+}
+}
