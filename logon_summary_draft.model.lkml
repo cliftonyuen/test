@@ -27,6 +27,10 @@ explore: user_info  {
   join: bginfotable {
     sql_on: ${bginfotable.user_name} = ${user_info.s_amaccount_name};;
     relationship:  one_to_many}
+  join: manager_info {
+    sql_on: ${user_info.distinguished_name} = ${manager_info.manager} ;;
+    relationship: many_to_one
+  }
 }
 
 
