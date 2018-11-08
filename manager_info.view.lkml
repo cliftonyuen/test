@@ -26,6 +26,7 @@ view: manager_info {
   }
 
   dimension: display_name {
+    label: "manager_display_name"
     type: string
     sql: ${TABLE}.displayName ;;
   }
@@ -37,6 +38,7 @@ view: manager_info {
   }
 
   dimension: mail {
+    label: "manager_email"
     type: string
     sql: ${TABLE}.mail ;;
   }
@@ -63,6 +65,7 @@ view: manager_info {
 
 
   dimension: ip_phone {
+    label: "manager_ext"
     type: string
     sql: ${TABLE}.ipPhone ;;
   }
