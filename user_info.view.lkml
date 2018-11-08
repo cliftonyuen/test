@@ -12,7 +12,6 @@ view: user_info {
         FROM  ''LDAP://dc04.nems.org/OU=Accounts,DC=nems,DC=org''
         WHERE objectClass =  ''User'' and ''userAccountControl:1.2.840.113556.1.4.803:''<>2') AS tblADSI
 
-      ORDER BY displayname
        ;;
   }
 
