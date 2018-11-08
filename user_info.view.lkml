@@ -11,8 +11,29 @@ view: user_info {
         mail, mobile, facsimileTelephoneNumber, department, physicalDeliveryOfficeName, sn, givenname,info, lastLogon, userAccountControl, ipPhone, badPwdCount, lockoutTime, distinguishedName, manager
         FROM  ''LDAP://dc04.nems.org/OU=Accounts,DC=nems,DC=org''
         WHERE objectClass =  ''User'' and ''userAccountControl:1.2.840.113556.1.4.803:''<>2') AS tblADSI
-      --where userAccountControl & 2 = 0
+
+      ORDER BY displayname
        ;;
+  }
+
+  measure: count {
+    type: count
+    drill_fields: [detail*]
+  }
+
+  dimension: extension_attribute9 {
+    type: string
+    sql: ${TABLE}.extensionAttribute9 ;;
+  }
+
+  dimension: streetaddress {
+    type: string
+    sql: ${TABLE}.streetaddress ;;
+  }
+
+  dimension: pager {
+    type: string
+    sql: ${TABLE}.pager ;;
   }
 
   dimension: company {
@@ -30,6 +51,10 @@ view: user_info {
     sql: ${TABLE}.displayName ;;
   }
 
+  dimension: telephone_number {
+    type: string
+    sql: ${TABLE}.telephoneNumber ;;
+  }
 
   dimension: s_amaccount_name {
     type: string
@@ -39,6 +64,16 @@ view: user_info {
   dimension: mail {
     type: string
     sql: ${TABLE}.mail ;;
+  }
+
+  dimension: mobile {
+    type: string
+    sql: ${TABLE}.mobile ;;
+  }
+
+  dimension: facsimile_telephone_number {
+    type: string
+    sql: ${TABLE}.facsimileTelephoneNumber ;;
   }
 
   dimension: department {
@@ -61,10 +96,29 @@ view: user_info {
     sql: ${TABLE}.givenname ;;
   }
 
+  dimension: info {
+    type: string
+    sql: ${TABLE}.info ;;
+  }
+
+  dimension: last_logon_time {
+    type: string
+    sql: ${TABLE}.lastLogon_time ;;
+  }
 
   dimension: ip_phone {
     type: string
     sql: ${TABLE}.ipPhone ;;
+  }
+
+  dimension: bad_pwd_count {
+    type: number
+    sql: ${TABLE}.badPwdCount ;;
+  }
+
+  dimension: locked_out_time {
+    type: string
+    sql: ${TABLE}.lockedOutTime ;;
   }
 
   dimension: distinguished_name {
@@ -77,30 +131,28 @@ view: user_info {
     sql: ${TABLE}.manager ;;
   }
 
-
-
   set: detail {
     fields: [
-#       extension_attribute9,
-#       streetaddress,
-#       pager,
+      extension_attribute9,
+      streetaddress,
+      pager,
       company,
       title,
       display_name,
-#       telephone_number,
+      telephone_number,
       s_amaccount_name,
       mail,
-#       mobile,
-#       facsimile_telephone_number,
+      mobile,
+      facsimile_telephone_number,
       department,
       physical_delivery_office_name,
       sn,
       givenname,
-#       info,
-#       last_logon_time,
+      info,
+      last_logon_time,
       ip_phone,
-#       bad_pwd_count,
-#       locked_out_time,
+      bad_pwd_count,
+      locked_out_time,
       distinguished_name,
       manager
     ]
